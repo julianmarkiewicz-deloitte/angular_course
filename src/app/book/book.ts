@@ -13,5 +13,12 @@ export class Book {
     pages: 1178,
   });
 
-  buttonDisabled = signal(true);
+  buttonDisabled = signal(false);
+
+  handleClick() {
+    this.book.update((book) => ({
+      ...book,
+      pages: book.pages + 100,
+    }));
+  }
 }
