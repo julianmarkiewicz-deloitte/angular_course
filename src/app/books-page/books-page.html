@@ -1,0 +1,3 @@
+@for (book of books(); track book.id) {
+  <app-book [book]="book" (updateBookPages)="handlePageUpdate($event)"></app-book>
+}
