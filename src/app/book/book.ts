@@ -23,10 +23,10 @@ export class Book {
 
   buttonDisabled = signal(false);
 
-  updateBookPages = output<number>();
+  updateBookPages = output<{ id: string; pages: number }>();
 
   handleClick() {
-    const updatedPages = (this.book().pages += 100);
-    this.updateBookPages.emit(updatedPages);
+    const updatedPages = this.book().pages + 100;
+    this.updateBookPages.emit({ id: this.book().id, pages: updatedPages });
   }
 }

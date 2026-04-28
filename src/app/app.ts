@@ -1,6 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Book, BookI } from './book/book';
-
+import { BookService } from './book.service';
 @Component({
   selector: 'app-root',
   imports: [Book],
@@ -8,16 +8,17 @@ import { Book, BookI } from './book/book';
   styleUrls: ['./app.css'],
 })
 export class App {
-  book = signal<BookI>({
-    id: '1',
-    title: 'The Lord of the Rings',
-    synopsis: 'An epic fantasy novel by J.R.R. Tolkien.',
-    pages: 1178,
-    price: 29.99,
-    authors: ['J.R.R. Tolkien', 'Another Author'],
-  });
+  booksService = inject(BookService);
 
-  handlePageUpdate(updatedPages: number) {
-    this.book().pages = updatedPages;
+  books = signal<BookI[]>([]);
+
+  constructor() {
+    this.books.set(this.booksService.getBooks());
+  }
+
+  handlePageUpdate(event: { id: string; pages: number }) {
+    this.books.update((books) =>
+      books.map((b) => (b.id === event.id ? { ...b, pages: event.pages } : b)),
+    );
   }
 }
