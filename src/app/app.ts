@@ -16,4 +16,8 @@ export class App {
     price: 29.99,
     authors: ['J.R.R. Tolkien', 'Another Author'],
   });
+
+  handlePageUpdate(updatedPages: number) {
+    this.book().pages = updatedPages;
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 
 export interface BookI {
@@ -21,12 +21,12 @@ export class Book {
 
   longBook = computed(() => this.book().pages > 1000);
 
-  buttonDisabled = signal(true);
+  buttonDisabled = signal(false);
+
+  updateBookPages = output<number>();
 
   handleClick() {
-    // this.book.update((book) => ({
-    //   ...book,
-    //   pages: book.pages + 100,
-    // }));
+    const updatedPages = (this.book().pages += 100);
+    this.updateBookPages.emit(updatedPages);
   }
 }
