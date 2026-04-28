@@ -1,0 +1,41 @@
+{
+  "books": [
+    {
+      "id": "1",
+      "title": "The Lord of the Rings",
+      "synopsis": "An epic fantasy novel by J.R.R. Tolkien.",
+      "pages": 1178,
+      "price": 29.99,
+      "authors": [
+        "J.R.R. Tolkien",
+        "Another Author"
+      ]
+    },
+    {
+      "id": "2",
+      "title": "Angular Deep Dive",
+      "synopsis": "A deep dive into Angular core concepts",
+      "pages": 700,
+      "price": 39.99,
+      "authors": [
+        "John Doe",
+        "Jane Smith"
+      ]
+    },
+    {
+      "id": "3",
+      "title": "Clean Code",
+      "synopsis": "A Handbook of Agile Software Craftsmanship by Robert C. Martin.",
+      "pages": 1064,
+      "price": 25.99,
+      "authors": [
+        "Robert C. Martin"
+      ]
+    }
+  ],
+  "profile": {
+    "name": "James",
+    "age": 30,
+    "email": "james123@gmail.com"
+  }
+}

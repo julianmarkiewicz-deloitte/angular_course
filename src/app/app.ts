@@ -14,12 +14,10 @@ export class App {
   books = signal<BookI[]>([]);
 
   constructor() {
-    this.books.set(this.booksService.getBooks());
+    this.booksService.getBooks();
   }
 
   handlePageUpdate(event: { id: string; pages: number }) {
-    this.books.update((books) =>
-      books.map((b) => (b.id === event.id ? { ...b, pages: event.pages } : b)),
-    );
+    this.booksService.updateBook(event.id, event.pages);
   }
 }

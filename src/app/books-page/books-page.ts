@@ -1,6 +1,6 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { BookService } from '../book.service';
-import { Book, BookI } from '../book/book';
+import { Book } from '../book/book';
 
 @Component({
   selector: 'app-books-page',
@@ -11,15 +11,13 @@ import { Book, BookI } from '../book/book';
 export class BooksPage {
   booksService = inject(BookService);
 
-  books = signal<BookI[]>([]);
+  books = computed(() => this.booksService.books());
 
   constructor() {
-    this.books.set(this.booksService.getBooks());
+    this.booksService.getBooks();
   }
 
   handlePageUpdate(event: { id: string; pages: number }) {
-    this.books.update((books) =>
-      books.map((b) => (b.id === event.id ? { ...b, pages: event.pages } : b)),
-    );
+    this.booksService.updateBook(event.id, event.pages);
   }
 }
