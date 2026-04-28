@@ -7,6 +7,8 @@
       <li>{{ author }}</li>
     }
   </ul>
+  <div>{{ book().price | currency: 'EUR' }}</div>
+
   @if (longBook()) {
     <div>This is a long book!</div>
   }
