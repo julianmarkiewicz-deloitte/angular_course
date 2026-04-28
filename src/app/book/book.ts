@@ -1,4 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
+
+export interface BookI {
+  id: string;
+  title: string;
+  synopsis: string;
+  pages: number;
+  authors: string[];
+}
 
 @Component({
   selector: 'app-book',
@@ -7,11 +15,15 @@ import { Component, signal } from '@angular/core';
   styleUrls: ['./book.css'],
 })
 export class Book {
-  book = signal({
+  book = signal<BookI>({
+    id: '1',
     title: 'The Lord of the Rings',
     synopsis: 'An epic fantasy novel by J.R.R. Tolkien.',
     pages: 1178,
+    authors: ['J.R.R. Tolkien', 'Another Author'],
   });
+
+  longBook = computed(() => this.book().pages > 1000);
 
   buttonDisabled = signal(false);
 
