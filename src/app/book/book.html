@@ -2,4 +2,5 @@
   <b>{{ book().title }}</b>
   <div>{{ book().synopsis }}</div>
   <div>{{ book().pages }}</div>
+  <button [class.disabled]="buttonDisabled()" [disabled]="buttonDisabled()">update book</button>
 </div>

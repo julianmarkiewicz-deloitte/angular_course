@@ -12,4 +12,6 @@ export class Book {
     synopsis: 'An epic fantasy novel by J.R.R. Tolkien.',
     pages: 1178,
   });
+
+  buttonDisabled = signal(true);
 }
