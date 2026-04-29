@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { BookService } from '../book.service';
 import { Router } from '@angular/router';
 
@@ -16,11 +16,15 @@ export class NewBookPage {
   errorMessage = signal<string | null>(null);
 
   bookForm = new FormGroup({
-    title: new FormControl(''),
-    synopsis: new FormControl(''),
-    pages: new FormControl(0),
-    price: new FormControl(0),
-    authors: new FormControl(''),
+    title: new FormControl('', [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.pattern(/^[^0-9]*$/),
+    ]),
+    synopsis: new FormControl('', [Validators.required, Validators.minLength(10)]),
+    pages: new FormControl(0, [Validators.required, Validators.min(1)]),
+    price: new FormControl(0, [Validators.required, Validators.max(999)]),
+    authors: new FormControl('', [Validators.required]),
   });
 
   onSubmit() {
