@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { BookService } from '../book.service';
 import { Book } from '../book/book';
 import { RouterLink } from '@angular/router';
@@ -12,7 +12,21 @@ import { RouterLink } from '@angular/router';
 export class BooksPage {
   booksService = inject(BookService);
 
+  searchTerm = signal('');
+
   books = computed(() => this.booksService.books());
+  filteredBooks = computed(() =>
+    this.books().filter(
+      (b) =>
+        b.title.toLowerCase().includes(this.searchTerm().toLowerCase()) ||
+        b.authors.some((a) => a.toLowerCase().includes(this.searchTerm().toLowerCase())),
+    ),
+  );
+
+  updateSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm.set(input.value);
+  }
 
   constructor() {
     this.booksService.getBooks().subscribe({

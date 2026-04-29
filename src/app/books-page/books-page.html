@@ -1,4 +1,10 @@
-@for (book of books(); track book.id) {
+<input
+  type="text"
+  placeholder="Search by title or author..."
+  (keydown.enter)="updateSearch($event)"
+/>
+
+@for (book of filteredBooks(); track book.id) {
   <app-book [book]="book" (updateBookPages)="handlePageUpdate($event)"></app-book>
 }
 <button [routerLink]="['/book/new']">create new book</button>
