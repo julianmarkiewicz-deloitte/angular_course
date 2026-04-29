@@ -1,6 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { BookI } from './book/book';
 import { HttpClient } from '@angular/common/http';
+import { catchError, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +12,23 @@ export class BookService {
   books = signal<BookI[]>([]);
 
   getBooks() {
-    this.http.get<BookI[]>('http://localhost:3000/books').subscribe((books) => {
-      this.books.set(books);
-    });
+    return this.http.get<BookI[]>('http://localhost:3000/books').pipe(
+      tap((books) => this.books.set(books)),
+      catchError((err) => {
+        console.error('Error fetching books:', err);
+        throw err;
+      }),
+    );
+  }
+
+  createBook(book: Omit<BookI, 'id'>) {
+    return this.http.post<BookI>('http://localhost:3000/books', book).pipe(
+      tap((newBook) => this.books.update((books) => [...books, newBook])),
+      catchError((err) => {
+        console.error('Error creating book:', err);
+        throw err;
+      }),
+    );
   }
 
   updateBook(id: string, pages: number) {
