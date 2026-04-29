@@ -4,31 +4,76 @@
   <div>
     <label for="title">Title</label>
     <input id="title" type="text" formControlName="title" />
+
+    @let titleCtrl = bookForm.controls.title;
+    @if (titleCtrl.touched && titleCtrl.errors) {
+      @if (titleCtrl.errors['required']) {
+        <span class="error">Title is required.</span>
+      } @else if (titleCtrl.errors['minlength']) {
+        <span class="error">Title must be at least 3 characters.</span>
+      } @else if (titleCtrl.errors['pattern']) {
+        <span class="error">Title cannot contain numbers.</span>
+      }
+    }
   </div>
 
   <div>
     <label for="synopsis">Synopsis</label>
     <textarea id="synopsis" formControlName="synopsis"></textarea>
+
+    @let synopsisCtrl = bookForm.controls.synopsis;
+    @if (synopsisCtrl.touched && synopsisCtrl.errors) {
+      @if (synopsisCtrl.errors['required']) {
+        <span class="error">Synopsis is required.</span>
+      } @else if (synopsisCtrl.errors['minlength']) {
+        <span class="error">Synopsis must be at least 10 characters.</span>
+      }
+    }
   </div>
 
   <div>
     <label for="pages">Pages</label>
     <input id="pages" type="number" formControlName="pages" />
+
+    @let pagesCtrl = bookForm.controls.pages;
+    @if (pagesCtrl.touched && pagesCtrl.errors) {
+      @if (pagesCtrl.errors['required']) {
+        <span class="error">Pages is required.</span>
+      } @else if (pagesCtrl.errors['min']) {
+        <span class="error">Pages must be at least 1.</span>
+      }
+    }
   </div>
 
   <div>
     <label for="price">Price</label>
     <input id="price" type="number" formControlName="price" />
+
+    @let priceCtrl = bookForm.controls.price;
+    @if (priceCtrl.touched && priceCtrl.errors) {
+      @if (priceCtrl.errors['required']) {
+        <span class="error">Price is required.</span>
+      } @else if (priceCtrl.errors['max']) {
+        <span class="error">Price cannot be more than 999.</span>
+      }
+    }
   </div>
 
   <div>
     <label for="authors">Authors (comma-separated)</label>
     <input id="authors" type="text" formControlName="authors" />
+
+    @let authorsCtrl = bookForm.controls.authors;
+    @if (authorsCtrl.touched && authorsCtrl.errors) {
+      @if (authorsCtrl.errors['required']) {
+        <span class="error">At least one author is required.</span>
+      }
+    }
   </div>
 
   @if (errorMessage()) {
     <div class="error">{{ errorMessage() }}</div>
   }
 
-  <button type="submit">Update Book</button>
+  <button type="submit" [disabled]="bookForm.invalid">Update Book</button>
 </form>
