@@ -22,6 +22,9 @@ export class BooksPage {
   }
 
   handlePageUpdate(event: { id: string; pages: number }) {
-    this.booksService.updateBook(event.id, event.pages);
+    this.booksService.updateBook(event.id, { pages: event.pages }).subscribe({
+      next: (updatedBook) => console.log('Book updated successfully:', updatedBook),
+      error: (err) => console.error('Error updating book:', err),
+    });
   }
 }

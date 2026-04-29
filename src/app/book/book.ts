@@ -1,5 +1,6 @@
 import { Component, computed, input, output, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 export interface BookI {
   id: string;
@@ -12,7 +13,7 @@ export interface BookI {
 
 @Component({
   selector: 'app-book',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, RouterLink],
   templateUrl: './book.html',
   styleUrls: ['./book.css'],
 })

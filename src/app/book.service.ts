@@ -31,13 +31,15 @@ export class BookService {
     );
   }
 
-  updateBook(id: string, pages: number) {
-    this.http
-      .patch<BookI>(`http://localhost:3000/books/${id}`, { pages })
-      .subscribe((updatedBook) => {
-        this.books.update((books) =>
-          books.map((b) => (b.id === updatedBook.id ? { ...b, pages: updatedBook.pages } : b)),
-        );
-      });
+  updateBook(id: string, book: Partial<Omit<BookI, 'id'>>) {
+    return this.http.patch<BookI>(`http://localhost:3000/books/${id}`, book).pipe(
+      tap((updatedBook) =>
+        this.books.update((books) => books.map((b) => (b.id === updatedBook.id ? updatedBook : b))),
+      ),
+      catchError((err) => {
+        console.error('Error updating book:', err);
+        throw err;
+      }),
+    );
   }
 }
