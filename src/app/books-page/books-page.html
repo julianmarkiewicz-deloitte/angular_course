@@ -1,10 +1,15 @@
 <input
+  #searchInput
   type="text"
   placeholder="Search by title or author..."
   (keydown.enter)="updateSearch($event)"
 />
 
 @for (book of filteredBooks(); track book.id) {
-  <app-book [book]="book" (updateBookPages)="handlePageUpdate($event)"></app-book>
+  <app-book [book]="book" (updateBookPages)="handlePageUpdate($event)">
+    @if (book.pages > 1000) {
+      <span book-badge #bookBadge class="badge">Long Read</span>
+    }
+  </app-book>
 }
 <button [routerLink]="['/book/new']">create new book</button>

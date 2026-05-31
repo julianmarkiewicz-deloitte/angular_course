@@ -1,4 +1,8 @@
 <div class="book-card">
+  <ng-content select="[book-badge]"></ng-content>
+  @if (hasCustomBadge()) {
+    <small>⬆</small>
+  }
   <b>{{ book().title }}</b>
   <div>{{ book().synopsis }}</div>
   <div>{{ book().pages }}</div>

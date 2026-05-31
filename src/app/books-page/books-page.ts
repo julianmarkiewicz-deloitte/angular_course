@@ -1,4 +1,13 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { BookService } from '../book.service';
 import { Book } from '../book/book';
 import { RouterLink } from '@angular/router';
@@ -9,8 +18,10 @@ import { RouterLink } from '@angular/router';
   templateUrl: './books-page.html',
   styleUrls: ['./books-page.css'],
 })
-export class BooksPage {
+export class BooksPage implements OnInit, AfterViewInit {
   booksService = inject(BookService);
+
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   searchTerm = signal('');
 
@@ -22,17 +33,22 @@ export class BooksPage {
         b.authors.some((a) => a.toLowerCase().includes(this.searchTerm().toLowerCase())),
     ),
   );
-
-  updateSearch(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm.set(input.value);
-  }
-
-  constructor() {
+  ngOnInit() {
     this.booksService.getBooks().subscribe({
       next: (books) => console.log('Books fetched successfully:', books),
       error: (err) => console.error('Error fetching books:', err),
     });
+  }
+
+  ngAfterViewInit() {
+    // view is fully rendered — DOM elements are accessible via @ViewChild
+    this.searchInput.nativeElement.focus();
+    console.log('Search input focused after view init');
+  }
+
+  updateSearch(event: Event) {
+    const input = event.target as HTMLInputElement;
+    this.searchTerm.set(input.value);
   }
 
   handlePageUpdate(event: { id: string; pages: number }) {

@@ -1,7 +1,8 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookService } from '../book.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-book-page',
@@ -9,13 +10,14 @@ import { BookService } from '../book.service';
   templateUrl: './edit-book-page.html',
   styleUrls: ['./edit-book-page.css'],
 })
-export class EditBookPage implements OnInit {
+export class EditBookPage implements OnInit, OnDestroy {
   bookService = inject(BookService);
   route = inject(ActivatedRoute);
   router = inject(Router);
 
   errorMessage = signal<string | null>(null);
   bookId = '';
+  private subscriptions = new Subscription();
 
   bookForm = new FormGroup({
     title: new FormControl('', [
@@ -43,10 +45,14 @@ export class EditBookPage implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
   onSubmit() {
     const { title, synopsis, pages, price, authors } = this.bookForm.value;
 
-    this.bookService
+    const sub = this.bookService
       .updateBook(this.bookId, {
         title: title ?? '',
         synopsis: synopsis ?? '',
@@ -63,5 +69,6 @@ export class EditBookPage implements OnInit {
           console.error('Error updating book:', err);
         },
       });
+    this.subscriptions.add(sub);
   }
 }
