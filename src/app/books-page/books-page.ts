@@ -11,6 +11,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BookService } from '../book.service';
+import { NotificationService } from '../notification.service';
 import { Book } from '../book/book';
 import { RouterLink } from '@angular/router';
 import { debounceTime, fromEvent, map } from 'rxjs';
@@ -23,6 +24,7 @@ import { debounceTime, fromEvent, map } from 'rxjs';
 })
 export class BooksPage implements OnInit, AfterViewInit {
   booksService = inject(BookService);
+  notificationService = inject(NotificationService);
   private destroyRef = inject(DestroyRef);
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
@@ -37,10 +39,11 @@ export class BooksPage implements OnInit, AfterViewInit {
         b.authors.some((a) => a.toLowerCase().includes(this.searchTerm().toLowerCase())),
     ),
   );
+
   ngOnInit() {
     this.booksService.getBooks().subscribe({
-      next: (books) => console.log('Books fetched successfully:', books),
-      error: (err) => console.error('Error fetching books:', err),
+      next: (books) => this.notificationService.notify(`${books.length} books loaded!`),
+      error: (err) => this.notificationService.notify('Failed to load books'),
     });
   }
 
