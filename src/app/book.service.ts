@@ -1,7 +1,7 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { BookI } from './book/book';
 import { HttpClient } from '@angular/common/http';
-import { catchError, tap } from 'rxjs';
+import { catchError, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +13,7 @@ export class BookService {
 
   getBooks() {
     return this.http.get<BookI[]>('http://localhost:3000/books').pipe(
+      map((books) => books.sort((a, b) => a.title.localeCompare(b.title))),
       tap((books) => this.books.set(books)),
       catchError((err) => {
         console.error('Error fetching books:', err);
@@ -41,5 +42,11 @@ export class BookService {
         throw err;
       }),
     );
+  }
+
+  getBookById(id: string) {
+    return this.http
+      .get<BookI[]>('http://localhost:3000/books')
+      .pipe(map((books) => books.filter((b) => b.id === id)[0]));
   }
 }

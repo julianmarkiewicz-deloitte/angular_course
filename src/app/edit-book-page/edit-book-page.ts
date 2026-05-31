@@ -2,7 +2,7 @@ import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BookService } from '../book.service';
-import { Subscription } from 'rxjs';
+import { filter, Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-edit-book-page',
@@ -32,17 +32,26 @@ export class EditBookPage implements OnInit, OnDestroy {
   });
 
   ngOnInit() {
-    this.bookId = this.route.snapshot.params['id'];
-    const book = this.bookService.books().find((b) => b.id === this.bookId);
-    if (!book) return;
+    const sub = this.route.params
+      .pipe(
+        filter((params) => !!params['id']),
+        switchMap((params) => {
+          this.bookId = params['id'];
+          return this.bookService.getBookById(params['id']);
+        }),
+      )
+      .subscribe((book) => {
+        if (!book) return;
 
-    this.bookForm.patchValue({
-      title: book.title,
-      synopsis: book.synopsis,
-      pages: book.pages,
-      price: book.price,
-      authors: book.authors.join(', '),
-    });
+        this.bookForm.patchValue({
+          title: book.title,
+          synopsis: book.synopsis,
+          pages: book.pages,
+          price: book.price,
+          authors: book.authors.join(', '),
+        });
+      });
+    this.subscriptions.add(sub);
   }
 
   ngOnDestroy() {

@@ -1,1 +1,7 @@
-<p>user page works</p>
+@if (profile()) {
+  <h2>Welcome, {{ profile()?.name }}</h2>
+  <p>Email: {{ profile()?.email }}</p>
+  <p>You have {{ totalBooks() }} books in the library.</p>
+} @else {
+  <p>Loading...</p>
+}

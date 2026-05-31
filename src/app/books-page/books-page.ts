@@ -2,15 +2,18 @@ import {
   AfterViewInit,
   Component,
   computed,
+  DestroyRef,
   ElementRef,
   inject,
   OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BookService } from '../book.service';
 import { Book } from '../book/book';
 import { RouterLink } from '@angular/router';
+import { debounceTime, fromEvent, map } from 'rxjs';
 
 @Component({
   selector: 'app-books-page',
@@ -20,6 +23,7 @@ import { RouterLink } from '@angular/router';
 })
 export class BooksPage implements OnInit, AfterViewInit {
   booksService = inject(BookService);
+  private destroyRef = inject(DestroyRef);
 
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
@@ -41,14 +45,15 @@ export class BooksPage implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    // view is fully rendered — DOM elements are accessible via @ViewChild
     this.searchInput.nativeElement.focus();
-    console.log('Search input focused after view init');
-  }
 
-  updateSearch(event: Event) {
-    const input = event.target as HTMLInputElement;
-    this.searchTerm.set(input.value);
+    fromEvent(this.searchInput.nativeElement, 'input')
+      .pipe(
+        debounceTime(300),
+        map((event) => (event.target as HTMLInputElement).value),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((term) => this.searchTerm.set(term));
   }
 
   handlePageUpdate(event: { id: string; pages: number }) {

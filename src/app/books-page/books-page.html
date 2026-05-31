@@ -1,9 +1,4 @@
-<input
-  #searchInput
-  type="text"
-  placeholder="Search by title or author..."
-  (keydown.enter)="updateSearch($event)"
-/>
+<input #searchInput type="text" placeholder="Search by title or author..." />
 
 @for (book of filteredBooks(); track book.id) {
   <app-book [book]="book" (updateBookPages)="handlePageUpdate($event)">
